@@ -1,0 +1,57 @@
+typedef sequence <long long, 50> ClientsRoomList;
+
+struct Room {
+	string roomName;
+	ClientsRoomList clientsRoomList;
+	long clientsJoined;
+	long roomIndex;
+};
+
+interface ChatRoom{
+	Room getRoom();
+};
+
+typedef sequence <ChatRoom, 50> RoomList;
+
+interface Listener {
+	string getUserName();
+	void setUserName(in string userName);
+
+	boolean getAuthenticated();
+	void setAuthenticated(in boolean status);
+
+	long long getClientId();
+	void message(in string userName, in string msg);
+	void recievePreviousMsg(in string msg);
+};
+
+typedef sequence <long long, 50> FriendList;
+
+struct ChatClient {
+	long long clientID;
+	string currentRoom;
+	FriendList friendList;
+	Listener listener;
+};
+
+interface ChatServer {
+	exception LimitClientsException{};
+	exception LimitRoomsException{};
+
+	readonly attribute long addClientID;
+
+	ChatRoom createRoom(in Room newroom) raises (LimitRoomsException);
+	RoomList getRooms();
+	long long getNumberOfRooms();
+	void setCurrentRoom(in long long clientID, in string currentRoom);
+	void enterRoom(in string roomName, in long long clientID);
+	long long getNumberOfClientsInRoom(in long long clientID);
+	void leaveRoom(in long long clientID);
+
+	ChatClient registerClient(in ChatClient newClient) raises (LimitClientsException);
+	boolean authenticate(in string password);
+
+	void previousMsg(in long long clientID);
+	void receiveMsg(in string userName, in long long clientId, in string msg);
+	void exit(in long long clientID);
+};
