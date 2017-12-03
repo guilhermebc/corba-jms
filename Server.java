@@ -1,4 +1,6 @@
-import org.omg.*;
+import org.omg.CORBA.*;
+import org.omg.CosNaming.*; 
+import org.omg.PortableServer.*;
 
 public class Server{
 	public void main(String args[]){
@@ -24,6 +26,5 @@ public class Server{
 				System.out.println("Erro");
 				ex.printStackTrace();
 			}
-		}
 	}
 }
